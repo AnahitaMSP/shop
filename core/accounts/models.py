@@ -5,7 +5,7 @@ from django.utils.translation import gettext_lazy as _
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from django.db import models
 from django.core.validators import RegexValidator
-from accounts.validators import validate_iranian_cellphone_number
+from accounts.validators import validate_iranian_cellphone_number,validate_national_code,validate_only_letters
 
 
 class UserType(models.IntegerChoices):
@@ -71,11 +71,12 @@ class User(AbstractBaseUser, PermissionsMixin):
 
 
 class Profile(models.Model):
-    user = models.OneToOneField('User', on_delete=models.CASCADE,related_name="user_profile")
-    first_name = models.CharField(max_length=255)
-    last_name = models.CharField(max_length=255)
+    user = models.OneToOneField('User', on_delete=models.CASCADE, related_name="user_profile")
+    first_name = models.CharField(max_length=255, validators=[validate_only_letters])
+    last_name = models.CharField(max_length=255, validators=[validate_only_letters])
     phone_number = models.CharField(max_length=12, validators=[validate_iranian_cellphone_number])
-    image = models.ImageField(upload_to="profile/",default="profile/default.png")
+    national_code = models.CharField(max_length=10, validators=[validate_national_code],null=True)  # اضافه کردن فیلد کد ملی
+    image = models.ImageField(upload_to="profile/", default="profile/default.png")
     created_date = models.DateTimeField(auto_now_add=True)
     updated_date = models.DateTimeField(auto_now=True)
 

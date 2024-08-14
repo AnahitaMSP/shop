@@ -13,3 +13,25 @@ def validate_iranian_cellphone_number(value):
 
     if re.match(pattern_international, value):
         return
+
+def validate_national_code(value):
+    pattern = r'^\d{10}$'
+    if not re.match(pattern, value):
+        raise ValidationError('کد ملی باید 10 رقم باشد و تنها شامل اعداد باشد.')
+
+    # اعتبارسنجی بر اساس الگوریتم کد ملی ایران
+    check_digit = int(value[-1])
+    sum_digits = sum(int(digit) * (10 - idx) for idx, digit in enumerate(value[:-1]))
+    remainder = sum_digits % 11
+
+    if remainder < 2:
+        if check_digit != remainder:
+            raise ValidationError('کد ملی معتبر نمی‌باشد.')
+    else:
+        if check_digit != 11 - remainder:
+            raise ValidationError('کد ملی معتبر نمی‌باشد.')
+        
+def validate_only_letters(value):
+    pattern = r'^[a-zA-Zآ-ی\s]+$'
+    if not re.match(pattern, value):
+        raise ValidationError('این فیلد فقط می‌تواند شامل حروف باشد.')
