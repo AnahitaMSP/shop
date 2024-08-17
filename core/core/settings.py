@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'debug_toolbar',
     'website',
     'accounts',
+    'shop',
 ]
 
 MIDDLEWARE = [
@@ -169,3 +170,6 @@ EMAIL_HOST_USER = config("EMAIL_HOST_USER",default="")
 EMAIL_HOST_PASSWORD = config("EMAIL_HOST_PASSWORD",default="") 
 
 AUTH_USER_MODEL = 'accounts.User'
+LOGIN_REDIRECT_URL='/'
+LOGOUT_REDIRECT_URL='/'
+
